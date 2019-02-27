@@ -1,37 +1,49 @@
 import os 
-
-products =[]
-
-#Check File
-if os.path.isfile('products.csv'):
-	print('These is such file')
-	# Read File
-	with open('products.csv', 'r', encoding='utf-8') as f:
-	for line in f:
-		if 'Product,Price' in line:
-			continue
-		name, price = line.strip().split(',')
-		products.append([name, price])
-		print(products)
-else:
-	print('No such file')
+# Read File
+def read_file(filename):
+	products = []
+	with open(filename, 'r', encoding='utf-8') as f:
+		for line in f:
+			if 'Product,Price' in line:
+				continue
+			name, price = line.strip().split(',')
+			products.append([name, price])
+	return products
 
 # Let User Input
-while True:
-	name  = input('Product: ')
-	if name == 'q':
-		break
-	price = input('Price:')
-	products.append([name, price])
+def user_input(products):
+	while True:
+		name  = input('Product: ')
+		if name == 'q':
+			break
+		price = input('Price:')
+		products.append([name, price])
+	print(products)
+	return products
 
 # Print History
-print(products)
-for p in products:
-	print('I bought a', p[0], 'for', p[1], 'dollars')
+def print_products(products):
+	for p in products:
+		print(p[0], 'costs', p[1])
 
 # Write File
-with open('products.csv', 'w', encoding='utf-8') as f:
-	f.write('Product,Price\n')
-	for p in products:
-		f.write(p[0] + ',' + p[1] + '\n')
+def write_file(filename, products):
+	with open(filename, 'w', encoding='utf-8') as f:
+		f.write('Product,Price\n')
+		for p in products:
+			f.write(p[0] + ',' + p[1] + '\n')
 
+def main():
+	filename = 'products.csv'
+	if os.path.isfile(filename):
+		print('These is such file')
+		products = read_file(filename)
+	else:
+		print('No such file')
+		products = []
+
+	products = user_input(products)
+	print_products(products)
+	write_file('products.csv', products)
+
+main()
